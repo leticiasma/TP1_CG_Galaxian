@@ -29,6 +29,8 @@ bool reiniciarJogo = false;
 float nave[12]; //Mudar isso pra classe já definida
 
 int numInimigosMortos = 0;
+int numVidas = 5;
+
 std::list <Tiro> tiros;
 std::list <Inimigo> inimigos;
 
@@ -99,6 +101,8 @@ int main(){
         if(!pause){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
+                numVidas = 5;
+
                 tiros.clear();
                 inimigos.clear();
                 bombasInimigas.clear();
@@ -126,6 +130,8 @@ int main(){
             removeBombasTela(bombasInimigas);
             removeTirosTela(tiros);
             removeInimigosTela(inimigos);
+
+            atingeNave(nave, bombasInimigas, numVidas);
             mataInimigos(inimigos, tiros, &numInimigosMortos);
 
             perdeuJogo = verificaSePerdeuOJogo(inimigos);
