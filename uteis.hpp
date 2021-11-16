@@ -23,6 +23,11 @@
 #define LARGURA_TIRO 5
 #define INC_TIRO 5
 
+//Bombas
+#define ALTURA_BOMBA 10
+#define LARGURA_BOMBA 10
+#define INC_BOMBA 3 //Já tem o atributo velocidade, mas é bem bugado
+
 //Nivel 1 --> (640-((30*10)+(7*9)))/2
 #define NUM_LINHAS_N1 2
 #define NUM_INIMIGOS_POR_LINHA_N1 10
@@ -43,7 +48,7 @@ void configuraJanela(){
     glLoadIdentity(); 
 }
 
-void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros){
+void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Render OpenGL here
@@ -63,6 +68,13 @@ void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& 
     for (auto &tiro : tiros){
         glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
         glVertexPointer( 3, GL_FLOAT, 0, tiro.vertices); // point to the vertices to be used
+        glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
+        glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
+    }
+
+    for (auto &bomba : bombasInimigas){
+        glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
+        glVertexPointer( 3, GL_FLOAT, 0, bomba.vertices); // point to the vertices to be used
         glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
         glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
     }
@@ -268,9 +280,76 @@ void removeTirosTela(std::list <Tiro>& tiros){
         if (it->vertices[7]>=ALTURA_TELA){
             it = tiros.erase(it);
         }
-        else{
-            ++it;
+
+        ++it;
+    }
+}
+
+//------------------------------------------------------------------------------------
+
+//Bombas
+void geraBomba(float x_meio_inimigo, float y_bl_inimigo, std::list <BombaInimiga>& bombasInimigas){
+    BombaInimiga nova_bomba;
+
+    float x_tl = x_meio_inimigo-LARGURA_BOMBA/2;
+
+    float y_inicial = y_bl_inimigo+ALTURA_BOMBA;
+
+    //TR
+    nova_bomba.vertices[0] = x_tl+LARGURA_BOMBA;
+    nova_bomba.vertices[1] = y_inicial;
+    nova_bomba.vertices[2] = 0.0;
+
+    //TL
+    nova_bomba.vertices[3] = x_tl;
+    nova_bomba.vertices[4] = y_inicial;
+    nova_bomba.vertices[5] = 0.0;
+
+    //BL
+    nova_bomba.vertices[6] = x_tl;
+    nova_bomba.vertices[7] = y_bl_inimigo;
+    nova_bomba.vertices[8] = 0.0;
+
+    //BR
+    nova_bomba.vertices[9] = x_tl+LARGURA_BOMBA;
+    nova_bomba.vertices[10] = y_bl_inimigo;
+    nova_bomba.vertices[11] = 0.0;
+
+    bombasInimigas.push_back(nova_bomba);
+}
+
+void atiraBombasInimigas(std::list <Inimigo>* inimigos, std::list <BombaInimiga>* bombasInimigas){
+    for (auto &inimigo : *inimigos){
+        if (inimigo.probabilidadeBomba > 0.5){
+            geraBomba(inimigo.vertices[3]+(LADO_INIMIGO_N1/2), inimigo.vertices[7], *bombasInimigas);
         }
+    }
+}
+
+void atualizaBombas(std::list <BombaInimiga>* bombasInimigas){
+    for (auto &bomba : *bombasInimigas){
+        bomba.vertices[1] -= INC_BOMBA;
+        bomba.vertices[4] -= INC_BOMBA;
+        bomba.vertices[7] -= INC_BOMBA;
+        bomba.vertices[10] -= INC_BOMBA;
+    }
+}
+
+void mudaProbabilidadesBombas(std::list <Inimigo>* inimigos){
+    for (auto &inimigo : *inimigos){
+        inimigo.probabilidadeBomba = (float)rand()/(float)RAND_MAX;
+    }
+}
+
+void removeBombasTela(std::list<BombaInimiga>& bombasInimigas){
+    std::list<BombaInimiga>::iterator it = bombasInimigas.begin();
+
+    while (it!=bombasInimigas.end()){
+        if (it->vertices[4]<=0){
+            it = bombasInimigas.erase(it);
+        }
+        
+        ++it;
     }
 }
 

@@ -1,3 +1,5 @@
+//TENTAR PERMITIR PARA LINUX TAMBÉM, COM .lib AO INVÉS DE .dll
+
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -55,12 +57,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
-// void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
-//     if (key == GLFW_KEY_R && action == GLFW_PRESS){
-//         reiniciarJogo = true;
-//     }
-// }
-
 //-----------------------------------------------------------------------------------
 
 int main(){
@@ -95,8 +91,11 @@ int main(){
 
     bool perdeuJogo = false;
 
+    int contagemWhile = 0;
+
     //Loop até que o usuário feche a janela
     while (!glfwWindowShouldClose(window) && !sairJogo){
+
         if(!pause){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
@@ -116,9 +115,19 @@ int main(){
                 printVenceuJogo = true;
             }
 
+            if(contagemWhile == 100){ //Tornar aleatório para não virem todas as bombas de uma vez
+                mudaProbabilidadesBombas(&inimigos);
+                atiraBombasInimigas(&inimigos, &bombasInimigas);
+                contagemWhile = 0;
+            }
+
+            contagemWhile ++;
+
+            removeBombasTela(bombasInimigas);
             removeTirosTela(tiros);
             removeInimigosTela(inimigos);
             mataInimigos(inimigos, tiros, &numInimigosMortos);
+
             perdeuJogo = verificaSePerdeuOJogo(inimigos);
             if (perdeuJogo && !printPerdeuJogo){
                 std::cout<<"VOCE PERDEU O JOGO!\n";
@@ -128,9 +137,10 @@ int main(){
             atualizaNave(&window, nave);
             atualizaInimigos(&inimigos);
             atualizaTiros(&tiros);
+            atualizaBombas(&bombasInimigas);
         }
 
-        renderizaJogo(nave, inimigos, tiros);
+        renderizaJogo(nave, inimigos, tiros, bombasInimigas);
  
         //Troca os buffers front e back
         glfwSwapBuffers(window);

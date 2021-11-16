@@ -12,7 +12,7 @@ class Nave{
 class Inimigo{
     public:
         float vertices [12];
-        float probabilidadeBomba = (float)rand()/(float)RAND_MAX;
+        float probabilidadeBomba = 0;
 };
 
 class Tiro{
@@ -23,6 +23,7 @@ class Tiro{
 class BombaInimiga{
     public:
         float vertices [12];
+        //float velocidadeBomba = (float)rand()/(float)RAND_MAX;
 };
 
 #endif
