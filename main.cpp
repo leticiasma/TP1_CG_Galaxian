@@ -18,17 +18,13 @@
 #define LARGURA_NAVE 60
 #define Y_FIXO_TL_NAVE 25
 
-//Inimigos
-#define X_MEIO_INICIAL_INIMIGO 320
-
 //------------------------------------------------------------------------------------
 
 //Globais
 bool pause = false; //Permite pausar o jogo
 
-float vert_quad_princ[12];
-
-float nave[12];
+float nave[12]; //Mudar isso pra classe já definida
+int numInimigosMortos = 0;
 std::list <Tiro> tiros;
 std::list <Inimigo> inimigos;
 
@@ -72,13 +68,29 @@ int main(){
     configuraJanela();
 
     inicializaNave(&window, nave); //POSSIVEL FONTE DE ERROS
-    geraInimigos(X_MEIO_INICIAL_INIMIGO, inimigos);
+    geraInimigos(inimigos);
+
+    bool printVenceuJogo = false;
+    bool printPerdeuJogo = false;
+
+    bool perdeuJogo = false;
 
     //Loop até que o usuário feche a janela
     while (!glfwWindowShouldClose(window)){
         if(!pause){
+            if (numInimigosMortos == 20 && !printVenceuJogo){
+                std::cout<<"VOCE VENCEU O JOGO!\n";
+                printVenceuJogo = true;
+            }
+
             removeTirosTela(tiros);
-            mataInimigos(inimigos, tiros);
+            removeInimigosTela(inimigos);
+            mataInimigos(inimigos, tiros, &numInimigosMortos);
+            perdeuJogo = verificaSePerdeuOJogo(inimigos);
+            if (perdeuJogo && !printPerdeuJogo){
+                std::cout<<"VOCE PERDEU O JOGO!\n";
+                printPerdeuJogo = true;
+            }
 
             atualizaNave(&window, nave);
             atualizaInimigos(&inimigos);

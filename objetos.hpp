@@ -4,6 +4,7 @@
 class Nave{
     public:
         float vertices [12];
+        int inimigosMortos = 0;
 };
 
 class Inimigo{

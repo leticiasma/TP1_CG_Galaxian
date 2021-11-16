@@ -16,19 +16,18 @@
 #define LARGURA_NAVE 60
 #define Y_FIXO_TL_NAVE 25
 
-//Inimigos
-#define Y_INICIAL_INIMIGO 480
-#define LADO_INIMIGO 20
-#define INC_INIMIGO 0.5
-
 //Tiros
-#define LADO_TIRO 7
+#define ALTURA_TIRO 20
+#define LARGURA_TIRO 5
 #define INC_TIRO 5
 
-//Niveis
-#define ESPACO_INIMIGOS_N1 5
-#define ESPACO_INIMIGOS_N2 10
-#define ESPACO_INIMIGOS_N3 20
+//Nivel 1 --> (640-((30*10)+(7*9)))/2
+#define NUM_LINHAS_N1 2
+#define NUM_INIMIGOS_POR_LINHA_N1 10
+#define LADO_INIMIGO_N1 30
+#define INC_INIMIGO_N1 0.5
+#define ESPACO_INIMIGOS_N1 10
+#define BORDAS_INICIAIS_TELA_N1 125
 
 //------------------------------------------------------------------------------------
 
@@ -42,12 +41,12 @@ void configuraJanela(){
     glLoadIdentity(); 
 }
 
-void renderizaJogo(float* vert_quad_princ,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros){
+void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros){
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Render OpenGL here
     glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
-    glVertexPointer( 3, GL_FLOAT, 0, vert_quad_princ); // point to the vertices to be used
+    glVertexPointer( 3, GL_FLOAT, 0, nave); // point to the vertices to be used
     glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
     glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
 
@@ -126,46 +125,53 @@ void atualizaNave(GLFWwindow** window, float* nave){
 //------------------------------------------------------------------------------------
 
 //Inimigos
-void geraInimigos(float x_meio, std::list <Inimigo>& inimigos){
-    Inimigo novo_inimigo;
+void geraInimigos(std::list <Inimigo>& inimigos){
+    float x_tl = BORDAS_INICIAIS_TELA_N1;
+    float y_tl = ALTURA_TELA+LADO_INIMIGO_N1;
 
-    float x_tl = x_meio-LADO_INIMIGO/2;
+    for (int i=0; i<NUM_LINHAS_N1; i++){
+        for (int j=0; j<NUM_INIMIGOS_POR_LINHA_N1; j++){
+            Inimigo novo_inimigo;
 
-    float y_inicial = Y_INICIAL_INIMIGO+LADO_INIMIGO;
+            //TR
+            novo_inimigo.vertices[0] = x_tl+LADO_INIMIGO_N1;
+            novo_inimigo.vertices[1] = y_tl;
+            novo_inimigo.vertices[2] = 0.0;
 
-    //TR
-    novo_inimigo.vertices[0] = x_tl+LADO_INIMIGO;
-    novo_inimigo.vertices[1] = y_inicial;
-    novo_inimigo.vertices[2] = 0.0;
+            //TL
+            novo_inimigo.vertices[3] = x_tl;
+            novo_inimigo.vertices[4] = y_tl;
+            novo_inimigo.vertices[5] = 0.0;
 
-    //TL
-    novo_inimigo.vertices[3] = x_tl;
-    novo_inimigo.vertices[4] = y_inicial;
-    novo_inimigo.vertices[5] = 0.0;
+            //BL
+            novo_inimigo.vertices[6] = x_tl;
+            novo_inimigo.vertices[7] = y_tl-LADO_INIMIGO_N1;
+            novo_inimigo.vertices[8] = 0.0;
 
-    //BL
-    novo_inimigo.vertices[6] = x_tl;
-    novo_inimigo.vertices[7] = Y_INICIAL_INIMIGO;
-    novo_inimigo.vertices[8] = 0.0;
+            //BR
+            novo_inimigo.vertices[9] = x_tl+LADO_INIMIGO_N1;
+            novo_inimigo.vertices[10] = y_tl-LADO_INIMIGO_N1;
+            novo_inimigo.vertices[11] = 0.0;
 
-    //BR
-    novo_inimigo.vertices[9] = x_tl+LADO_INIMIGO;
-    novo_inimigo.vertices[10] = Y_INICIAL_INIMIGO;
-    novo_inimigo.vertices[11] = 0.0;
+            inimigos.push_back(novo_inimigo);
 
-    inimigos.push_back(novo_inimigo);
+            x_tl += LADO_INIMIGO_N1+ESPACO_INIMIGOS_N1;
+        }
+        x_tl = BORDAS_INICIAIS_TELA_N1;
+        y_tl += LADO_INIMIGO_N1+ESPACO_INIMIGOS_N1;
+    }
 }
 
 void atualizaInimigos(std::list <Inimigo>* inimigos){
     for (auto &inimigo : *inimigos){
-        inimigo.vertices[1] -= INC_INIMIGO;
-        inimigo.vertices[4] -= INC_INIMIGO;
-        inimigo.vertices[7] -= INC_INIMIGO;
-        inimigo.vertices[10] -= INC_INIMIGO;
+        inimigo.vertices[1] -= INC_INIMIGO_N1;
+        inimigo.vertices[4] -= INC_INIMIGO_N1;
+        inimigo.vertices[7] -= INC_INIMIGO_N1;
+        inimigo.vertices[10] -= INC_INIMIGO_N1;
     }
 }
 
-void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros){
+void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* numInimigosMortos){
     std::list <Inimigo>::iterator it_inimigo = inimigos.begin();
 
     while (it_inimigo!=inimigos.end()){
@@ -176,6 +182,8 @@ void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros){
                 if (it_tiro->vertices[4]>=it_inimigo->vertices[7]){
                     it_inimigo = inimigos.erase(it_inimigo);
                     it_tiro = tiros.erase(it_tiro);
+                    
+                    *numInimigosMortos += 1;
                 }
             }
 
@@ -186,29 +194,56 @@ void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros){
     }    
 }
 
+void removeInimigosTela(std::list <Inimigo>& inimigos){
+    std::list <Inimigo>::iterator it = inimigos.begin();
+
+    while (it!=inimigos.end()){
+        if (it->vertices[4]<=0){
+            it = inimigos.erase(it);
+        }
+        ++it;
+    }
+}
+
+bool verificaSePerdeuOJogo(std::list <Inimigo>& inimigos){
+    std::list <Inimigo>::iterator it = inimigos.begin();
+
+    while (it!=inimigos.end()){
+        if (it->vertices[7]<=Y_FIXO_TL_NAVE){
+            return true;
+        }
+        ++it;
+    }
+    return false;
+}
+
 //------------------------------------------------------------------------------------
 
 //Tiros
 void geraTiro(float x_meio, std::list <Tiro>& tiros){
     Tiro novo_tiro;
 
-    float x_tl = x_meio-LADO_TIRO/2;
+    float x_tl = x_meio-LARGURA_TIRO/2;
 
-    float y_inicial = Y_FIXO_TL_NAVE+LADO_TIRO;
+    float y_inicial = Y_FIXO_TL_NAVE+ALTURA_TIRO;
 
-    novo_tiro.vertices[0] = x_tl+LADO_TIRO;
+    //TR
+    novo_tiro.vertices[0] = x_tl+LARGURA_TIRO;
     novo_tiro.vertices[1] = y_inicial;
     novo_tiro.vertices[2] = 0.0;
 
+    //TL
     novo_tiro.vertices[3] = x_tl;
     novo_tiro.vertices[4] = y_inicial;
     novo_tiro.vertices[5] = 0.0;
 
+    //BL
     novo_tiro.vertices[6] = x_tl;
     novo_tiro.vertices[7] = Y_FIXO_TL_NAVE;
     novo_tiro.vertices[8] = 0.0;
 
-    novo_tiro.vertices[9] = x_tl+LADO_TIRO;
+    //BR
+    novo_tiro.vertices[9] = x_tl+LARGURA_TIRO;
     novo_tiro.vertices[10] = Y_FIXO_TL_NAVE;
     novo_tiro.vertices[11] = 0.0;
 
