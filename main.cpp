@@ -24,8 +24,8 @@
 bool pause = false; //Permite pausar o jogo
 bool sairJogo = false;
 bool reiniciarJogo = false;
-
 float nave[12]; //Mudar isso pra classe já definida
+
 int numInimigosMortos = 0;
 std::list <Tiro> tiros;
 std::list <Inimigo> inimigos;
@@ -49,6 +49,9 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
         sairJogo = true;
+    }
+    if (key == GLFW_KEY_R && action == GLFW_PRESS){
+        reiniciarJogo = true;
     }
 }
 
@@ -95,6 +98,19 @@ int main(){
     //Loop até que o usuário feche a janela
     while (!glfwWindowShouldClose(window) && !sairJogo){
         if(!pause){
+            if(reiniciarJogo){
+                numInimigosMortos = 0;
+                tiros.clear();
+                inimigos.clear();
+                bombasInimigas.clear();
+
+                geraInimigos(inimigos);
+
+                reiniciarJogo = false;
+                printVenceuJogo = false;
+                printPerdeuJogo = false;
+            }
+
             if (numInimigosMortos == 20 && !printVenceuJogo){
                 std::cout<<"VOCE VENCEU O JOGO!\n";
                 printVenceuJogo = true;
@@ -107,7 +123,6 @@ int main(){
             if (perdeuJogo && !printPerdeuJogo){
                 std::cout<<"VOCE PERDEU O JOGO!\n";
                 printPerdeuJogo = true;
-                break;
             }
 
             atualizaNave(&window, nave);
