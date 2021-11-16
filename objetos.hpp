@@ -1,5 +1,7 @@
 #ifndef OBJETOS_H
 #define OBJETOS_H
+ 
+#include <random>
 
 class Nave{
     public:
@@ -10,9 +12,15 @@ class Nave{
 class Inimigo{
     public:
         float vertices [12];
+        float probabilidadeBomba = (float)rand()/(float)RAND_MAX;
 };
 
 class Tiro{
+    public:
+        float vertices [12];
+};
+
+class BombaInimiga{
     public:
         float vertices [12];
 };

@@ -22,11 +22,15 @@
 
 //Globais
 bool pause = false; //Permite pausar o jogo
+bool sairJogo = false;
+bool reiniciarJogo = false;
 
 float nave[12]; //Mudar isso pra classe já definida
 int numInimigosMortos = 0;
 std::list <Tiro> tiros;
 std::list <Inimigo> inimigos;
+
+std::list<BombaInimiga> bombasInimigas;
 
 //-----------------------------------------------------------------------------------
 
@@ -39,6 +43,18 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     }
     if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS){
         pause = !pause;
+    }
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
+        sairJogo = true;
+    }
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+    if (key == GLFW_KEY_R && action == GLFW_PRESS){
+        reiniciarJogo = true;
     }
 }
 
@@ -61,6 +77,7 @@ int main(){
     }
     
     glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     //Tornar o contexto da janela vigente
     glfwMakeContextCurrent(window);
@@ -76,7 +93,7 @@ int main(){
     bool perdeuJogo = false;
 
     //Loop até que o usuário feche a janela
-    while (!glfwWindowShouldClose(window)){
+    while (!glfwWindowShouldClose(window) && !sairJogo){
         if(!pause){
             if (numInimigosMortos == 20 && !printVenceuJogo){
                 std::cout<<"VOCE VENCEU O JOGO!\n";
@@ -90,6 +107,7 @@ int main(){
             if (perdeuJogo && !printPerdeuJogo){
                 std::cout<<"VOCE PERDEU O JOGO!\n";
                 printPerdeuJogo = true;
+                break;
             }
 
             atualizaNave(&window, nave);
