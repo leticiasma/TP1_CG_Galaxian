@@ -18,7 +18,7 @@ COMPILER_FLAGS =
 LINKER_FLAGS = -lglfw3 -lOpenGL32
 
 #Executable name
-EXE_NAME = demo
+EXE_NAME = galaxian
 
 #This is the target that compiles our executable
 all : $(OBJS)
