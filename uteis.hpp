@@ -356,7 +356,7 @@ void removeBombasTela(std::list<BombaInimiga>& bombasInimigas){
 void atingeNave(float* nave, std::list<BombaInimiga>& bombasInimigas, int &numVidas){
     std::list<BombaInimiga>::iterator it = bombasInimigas.begin();
 
-    while (it!=bombasInimigas.end()){ //Acho que tem que excluir as bombas antes do fim da tela senão se eu passar por cima vai contar como dano
+    while (it!=bombasInimigas.end()){ //Acho que tem que excluir as bombas antes do fim da tela senão se eu passar por cima vai contar como dano ou deixar o espaçamento embaixo da nave menor que uma bomba
         if (it->vertices[7]<=Y_FIXO_TL_NAVE){
             if (it->vertices[9]<=nave[9] && it->vertices[6]>=nave[6]){
 
