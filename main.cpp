@@ -26,6 +26,7 @@
 bool pause = false; //Permite pausar o jogo
 bool sairJogo = false;
 bool reiniciarJogo = false;
+
 float nave[12]; //Mudar isso pra classe já definida
 
 int numInimigosMortos = 0;
@@ -47,6 +48,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     }
     if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS){
         pause = !pause;
+        imprimeCoordenadas(nave, inimigos, tiros, bombasInimigas);
     }
 }
 
@@ -115,7 +117,7 @@ int main(){
             }
 
             if (numInimigosMortos == 20 && !printVenceuJogo){
-                std::cout<<"VOCE VENCEU O JOGO!\n";
+                std::cout<<"\nVOCE VENCEU O JOGO!\n";
                 printVenceuJogo = true;
             }
 
@@ -136,7 +138,7 @@ int main(){
 
             perdeuJogo = verificaSePerdeuOJogo(inimigos);
             if (perdeuJogo && !printPerdeuJogo){
-                std::cout<<"VOCE PERDEU O JOGO!\n";
+                std::cout<<"\nVOCE PERDEU O JOGO!\n";
                 printPerdeuJogo = true;
             }
 

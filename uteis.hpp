@@ -80,6 +80,43 @@ void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& 
     }
 }
 
+void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
+    std::cout<<"POSICAO DA NAVE: \n";
+    std::cout<<"("<<nave[3]<<","<<nave[4]<<") ";
+    std::cout<<"("<<nave[0]<<","<<nave[1]<<") ";
+    std::cout<<"("<<nave[9]<<","<<nave[10]<<") ";
+    std::cout<<"("<<nave[6]<<","<<nave[7]<<") \n\n";
+
+    std::cout<<"POSICAO TIROS DA NAVE: \n";
+    for (auto &tiro : tiros){
+        std::cout<<"("<<tiro.vertices[3]<<","<<tiro.vertices[4]<<") ";
+        std::cout<<"("<<tiro.vertices[0]<<","<<tiro.vertices[1]<<") ";
+        std::cout<<"("<<tiro.vertices[9]<<","<<tiro.vertices[10]<<") ";
+        std::cout<<"("<<tiro.vertices[6]<<","<<tiro.vertices[7]<<") \n";
+    }
+    std::cout<<std::endl;
+
+
+    std::cout<<"POSICAO DOS INIMIGOS: \n";
+    for (auto &inimigo : inimigos){
+        std::cout<<"("<<inimigo.vertices[3]<<","<<inimigo.vertices[4]<<") ";
+        std::cout<<"("<<inimigo.vertices[0]<<","<<inimigo.vertices[1]<<") ";
+        std::cout<<"("<<inimigo.vertices[9]<<","<<inimigo.vertices[10]<<") ";
+        std::cout<<"("<<inimigo.vertices[6]<<","<<inimigo.vertices[7]<<") \n";
+    }
+    std::cout<<std::endl;
+
+    std::cout<<"POSICAO DAS BOMBAS INIMIGAS: \n";
+    for (auto &bomba : bombasInimigas){
+        std::cout<<"("<<bomba.vertices[3]<<","<<bomba.vertices[4]<<") ";
+        std::cout<<"("<<bomba.vertices[0]<<","<<bomba.vertices[1]<<") ";
+        std::cout<<"("<<bomba.vertices[9]<<","<<bomba.vertices[10]<<") ";
+        std::cout<<"("<<bomba.vertices[6]<<","<<bomba.vertices[7]<<") \n";
+    }
+    std::cout<<std::endl;
+
+}
+
 //------------------------------------------------------------------------------------
 
 //Nave
@@ -224,6 +261,7 @@ bool verificaSePerdeuOJogo(std::list <Inimigo>& inimigos){
 
     while (it!=inimigos.end()){
         if (it->vertices[7]<=Y_FIXO_TL_NAVE){
+            //geraBombaMutante(it);
             return true;
         }
         ++it;
@@ -361,11 +399,11 @@ void atingeNave(float* nave, std::list<BombaInimiga>& bombasInimigas, int &numVi
             if (it->vertices[9]<=nave[9] && it->vertices[6]>=nave[6]){
 
                 if (numVidas <= 1){
-                    std::cout<<"VOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
+                    std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
                 }
                 else{
                     numVidas--;
-                    std::cout<<"VOCE FOI ATINGIDO, RESTAM "<<numVidas<<" VIDAS!\n";
+                    std::cout<<"\nVOCE FOI ATINGIDO, RESTAM "<<numVidas<<" VIDAS!\n";
                 }                    
 
                 it = bombasInimigas.erase(it);
