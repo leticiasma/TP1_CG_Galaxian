@@ -13,23 +13,62 @@ void configuraJanela(){
 }
 
 void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
+    
+    float colors[] = {
+        1.0f, 0.0f, 0.0f // red
+        // 1.0f, 0.0f, 0.0f,
+        // 1.0f, 0.0f, 0.0f
+        // 0.0f, 1.0f, 0.0f, // green
+        // 0.0f, 1.0f, 0.0f,
+        // 0.0f, 1.0f, 0.0f
+    };
+
+    float colors2[] = {
+        0.0f, 0.0f, 1.0f // red
+        // 1.0f, 0.0f, 0.0f,
+        // 1.0f, 0.0f, 0.0f
+        // 0.0f, 1.0f, 0.0f, // green
+        // 0.0f, 1.0f, 0.0f,
+        // 0.0f, 1.0f, 0.0f
+    };
+
+    static const GLfloat corNave[] = {0.4, 0.4, 0.4};
+    static const GLfloat corTiros[] = {1.0, 1.0, 0.1};
+    static const GLfloat corInimigos[] = {0.6, 0.0, 0.0};
+    static const GLfloat corBombas[] = {0.0, 0.0, 0.0};
+    
+    glClearColor(0.0f, 0.0f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    for (auto &inimigo : inimigos){
+        glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
+        glVertexPointer( 3, GL_FLOAT, 0, inimigo.vertices); // point to the vertices to be used
+
+        // glEnableClientState(GL_COLOR_ARRAY);
+        // glColorPointer(4, GL_FLOAT, 0, colors);
+        // glBegin(GL_TRIANGLE_FAN);
+        glColor3fv(corInimigos);
+        // glEnd();
+
+        glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
+        glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
+        //glDisableClientState( GL_COLOR_ARRAY );
+    }
+
+    // glEnableClientState(GL_COLOR_ARRAY);
+    // glColorPointer(4, GL_FLOAT, 0, colors2);
+
     // Render OpenGL here
+    glColor3fv(corNave);
     glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
     glVertexPointer( 3, GL_FLOAT, 0, nave); // point to the vertices to be used
     glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
     glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
 
-
-    for (auto &inimigo : inimigos){
-        glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
-        glVertexPointer( 3, GL_FLOAT, 0, inimigo.vertices); // point to the vertices to be used
-        glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
-        glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
-    }
+    //glDisableClientState( GL_COLOR_ARRAY );
 
     for (auto &tiro : tiros){
+        glColor3fv(corTiros);
         glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
         glVertexPointer( 3, GL_FLOAT, 0, tiro.vertices); // point to the vertices to be used
         glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
@@ -37,6 +76,7 @@ void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& 
     }
 
     for (auto &bomba : bombasInimigas){
+        glColor3fv(corBombas);
         glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
         glVertexPointer( 3, GL_FLOAT, 0, bomba.vertices); // point to the vertices to be used
         glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes

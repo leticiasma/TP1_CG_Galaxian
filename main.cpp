@@ -94,13 +94,28 @@ int main(){
     bool printPerdeuJogo = false;
 
     bool perdeuJogo = false;
+    bool travaJogo = false;
 
     int contagemWhile = 0;
 
     //Loop até que o usuário feche a janela
     while (!glfwWindowShouldClose(window) && !sairJogo){
 
-        if(!pause){
+        // float colors[] = {
+        //     1.0f, 0.0f, 0.0f, // red
+        //     1.0f, 0.0f, 0.0f,
+        //     1.0f, 0.0f, 0.0f,
+        //     0.0f, 1.0f, 0.0f, // green
+        //     0.0f, 1.0f, 0.0f,
+        //     0.0f, 1.0f, 0.0f
+        // };
+
+        // glEnableClientState(GL_COLOR_ARRAY);
+        // glColorPointer(3, GL_FLOAT, 0, colors);
+
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        if(!pause && !travaJogo){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
                 numVidas = 5;
@@ -140,6 +155,7 @@ int main(){
             if (perdeuJogo && !printPerdeuJogo){
                 std::cout<<"\nVOCE PERDEU O JOGO!\n";
                 printPerdeuJogo = true;
+                travaJogo = true;
             }
 
             atualizaNave(&window, nave);
