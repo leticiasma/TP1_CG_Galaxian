@@ -6,12 +6,17 @@
 #include "objetos.hpp"
 
 #include <iostream>
+#include <ctime>
 
 //------------------------------------------------------------------------------------
 
 //Tela
 #define LARGURA_TELA 640
 #define ALTURA_TELA 480
+
+//Estrela
+#define LADO_ESTRELA 1
+#define NUM_ESTRELAS 100
 
 //Nave
 #define ALTURA_NAVE 15
@@ -41,9 +46,13 @@
 //Tela
 void configuraJanela();
 
-void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas);
+void renderizaJogo(float* nave, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas);
 
 void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas);
+
+//------------------------------------------------------------------------------------
+//Estrelas
+void geraEstrelas(std::list <Estrela>& estrelas);
 
 //------------------------------------------------------------------------------------
 

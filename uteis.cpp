@@ -12,7 +12,7 @@ void configuraJanela(){
     glLoadIdentity(); 
 }
 
-void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
+void renderizaJogo(float* nave, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
     
     float colors[] = {
         1.0f, 0.0f, 0.0f // red
@@ -36,9 +36,25 @@ void renderizaJogo(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& 
     static const GLfloat corTiros[] = {1.0, 1.0, 0.1};
     static const GLfloat corInimigos[] = {0.6, 0.0, 0.0};
     static const GLfloat corBombas[] = {0.0, 0.0, 0.0};
+    static const GLfloat corEstrelas[] = {1.0, 1.0, 1.0};
     
     glClearColor(0.0f, 0.0f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    for (auto &estrela : estrelas){
+        glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
+        glVertexPointer( 3, GL_FLOAT, 0, estrela.vertices); // point to the vertices to be used
+
+        // glEnableClientState(GL_COLOR_ARRAY);
+        // glColorPointer(4, GL_FLOAT, 0, colors);
+        // glBegin(GL_TRIANGLE_FAN);
+        glColor3fv(corEstrelas);
+        // glEnd();
+
+        glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
+        glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
+        //glDisableClientState( GL_COLOR_ARRAY );
+    }    
 
     for (auto &inimigo : inimigos){
         glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
@@ -118,6 +134,46 @@ void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Ti
         std::cout<<"("<<bomba.vertices[6]<<","<<bomba.vertices[7]<<") \n";
     }
     std::cout<<std::endl;
+
+}
+
+//------------------------------------------------------------------------------------
+
+//Estrelas
+void geraEstrelas(std::list <Estrela>& estrelas){
+
+    unsigned seed = time(0);
+
+    srand(seed);
+
+    for (int i=0; i<NUM_ESTRELAS; i++){
+        float x_tl = rand()%(LARGURA_TELA-LADO_ESTRELA);
+        float y_tl = rand()%(ALTURA_TELA-LADO_ESTRELA);
+
+        Estrela nova_estrela;
+
+        //TR
+        nova_estrela.vertices[0] = x_tl+LADO_ESTRELA;
+        nova_estrela.vertices[1] = y_tl;
+        nova_estrela.vertices[2] = 0.0;
+
+        //TL
+        nova_estrela.vertices[3] = x_tl;
+        nova_estrela.vertices[4] = y_tl;
+        nova_estrela.vertices[5] = 0.0;
+
+        //BL
+        nova_estrela.vertices[6] = x_tl;
+        nova_estrela.vertices[7] = y_tl-LADO_ESTRELA;
+        nova_estrela.vertices[8] = 0.0;
+
+        //BR
+        nova_estrela.vertices[9] = x_tl+LADO_ESTRELA;
+        nova_estrela.vertices[10] = y_tl-LADO_ESTRELA;
+        nova_estrela.vertices[11] = 0.0;
+
+        estrelas.push_back(nova_estrela);
+    }
 
 }
 

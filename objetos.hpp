@@ -26,4 +26,10 @@ class BombaInimiga{
         //float velocidadeBomba = (float)rand()/(float)RAND_MAX;
 };
 
+class Estrela{
+    public:
+        float vertices [12];
+        //float velocidadeBomba = (float)rand()/(float)RAND_MAX;
+};
+
 #endif

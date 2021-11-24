@@ -37,6 +37,8 @@ std::list <Inimigo> inimigos;
 
 std::list<BombaInimiga> bombasInimigas;
 
+std::list<Estrela> estrelas;
+
 //-----------------------------------------------------------------------------------
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
@@ -89,33 +91,19 @@ int main(){
 
     inicializaNave(&window, nave); //POSSIVEL FONTE DE ERROS
     geraInimigos(inimigos);
+    geraEstrelas(estrelas);
 
     bool printVenceuJogo = false;
     bool printPerdeuJogo = false;
 
     bool perdeuJogo = false;
-    bool travaJogo = false;
 
     int contagemWhile = 0;
 
     //Loop até que o usuário feche a janela
     while (!glfwWindowShouldClose(window) && !sairJogo){
 
-        // float colors[] = {
-        //     1.0f, 0.0f, 0.0f, // red
-        //     1.0f, 0.0f, 0.0f,
-        //     1.0f, 0.0f, 0.0f,
-        //     0.0f, 1.0f, 0.0f, // green
-        //     0.0f, 1.0f, 0.0f,
-        //     0.0f, 1.0f, 0.0f
-        // };
-
-        // glEnableClientState(GL_COLOR_ARRAY);
-        // glColorPointer(3, GL_FLOAT, 0, colors);
-
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        if(!pause && !travaJogo){
+        if(!pause){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
                 numVidas = 5;
@@ -155,7 +143,6 @@ int main(){
             if (perdeuJogo && !printPerdeuJogo){
                 std::cout<<"\nVOCE PERDEU O JOGO!\n";
                 printPerdeuJogo = true;
-                travaJogo = true;
             }
 
             atualizaNave(&window, nave);
@@ -164,7 +151,7 @@ int main(){
             atualizaBombas(&bombasInimigas);
         }
 
-        renderizaJogo(nave, inimigos, tiros, bombasInimigas);
+        renderizaJogo(nave, estrelas, inimigos, tiros, bombasInimigas);
  
         //Troca os buffers front e back
         glfwSwapBuffers(window);
