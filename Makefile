@@ -1,6 +1,6 @@
 #Files that will be compiled
 #OBJS = shader.cpp main.cpp glad.c
-OBJS = main.cpp
+OBJS = main.cpp uteis.cpp
 
 #Used compiler
 CC = g++
