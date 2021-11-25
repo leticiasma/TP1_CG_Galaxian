@@ -37,6 +37,8 @@ bool subirNivel = false;
 bool venceu = false;
 bool perdeu = false;
 
+bool venceuJogo = false;
+
 bool perdeuJogo = false;
 
 float nave[12]; //Mudar isso pra classe já definida
@@ -60,7 +62,10 @@ Nivel nivelJogo;
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods){
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS){
-        geraTiro(nave[3]+(int)(LARGURA_NAVE/2), tiros);
+        if (!pause && !perdeuJogo && !venceuJogo){
+            geraTiro(nave[3]+(int)(LARGURA_NAVE/2), tiros);
+        }
+        
     }
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
         pause = !pause;
@@ -76,7 +81,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         sairJogo = true;
     }
     if (key == GLFW_KEY_R && action == GLFW_PRESS){
-        numVidas = 5; //AAAAAAAAAAAAAAAAAAAA
+        numVidas = 5; 
         reiniciarJogo = true;
         nivelJogo.nivel = 1;
         nivelJogo.numLinhas = 1;
@@ -90,38 +95,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
         venceu = false;
         perdeu = false;
+
+        venceuJogo = false;
         
     }
 }
-
-// void bitmap_output(int x, int y, char *string, void *font)
-// {
-//   int len, i;
-
-//   glRasterPos2f(x, y);
-//   len = (int) strlen(string);
-//   for (i = 0; i < len; i++) {
-//     glutBitmapCharacter(font, string[i]);
-//   }
-// }
-
-// void Draw_Game_Over()
-// {
-//   glColor3f(0.8, 0.0, 0.0);
-//   bitmap_output((0 + LARGURA_TELA) / 2 - 8,
-//                 (0 + ALTURA_TELA) / 2 + 4,
-//                 "GAME OVER", GLUT_BITMAP_TIMES_ROMAN_24);
-//   if (true)
-//     bitmap_output((0 + LARGURA_TELA) / 2 - 18,
-//                   (0 + ALTURA_TELA) / 2 - 4,
-//                   "Congratulations. You stopped the invasion.",
-//                   GLUT_BITMAP_HELVETICA_18);
-// //   else
-// //     bitmap_output((SCREEN_LEFT + SCREEN_RIGHT) / 2 - 18,
-// //                   (SCREEN_BOTTOM + SCREEN_TOP) / 2 - 4,
-// //                   "Humpf. Mankind is doomed because of you.",
-// //                   GLUT_BITMAP_HELVETICA_18);
-// }
 
 //-----------------------------------------------------------------------------------
 
@@ -166,7 +144,7 @@ int main(int argc, char *argv[]){
 
         //RenderString(0.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24, "Hello", RGB(1.0f, 0.0f, 0.0f));
 
-        if(!pause && !perdeuJogo){
+        if(!pause && !perdeuJogo && !venceuJogo){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
                 //numVidas = 5;
@@ -185,10 +163,12 @@ int main(int argc, char *argv[]){
             }
 
 
-            if (numInimigosMortos == nivelJogo.numLinhas*nivelJogo.numInimigosPorLinha && !printVenceuJogo){
+            if (totalInimigosMortos == 60 && !printVenceuJogo){
                 if (nivelJogo.nivel == 3){                    
                     //std::cout<<"\nVOCE VENCEU O JOGO! FORAM MORTOS "<<totalInimigosMortos<<" INIMIGOS. DIGITE R PARA REINICIAR.\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
-                    perdeuJogo = true; //Deveria travar a nave...
+                    //perdeuJogo = true; //Deveria travar a nave...
+
+                    venceuJogo = true;
 
                     venceu = true;
                 }
