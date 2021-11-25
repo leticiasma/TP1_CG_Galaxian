@@ -7,7 +7,9 @@
 #include <iterator>
 
 #include "objetos.hpp"
-#include "uteis.hpp"
+#include "uteisTela.hpp"
+#include "uteisNave.hpp"
+#include "uteisInimigos.hpp"
 
 //------------------------------------------------------------------------------------
 
