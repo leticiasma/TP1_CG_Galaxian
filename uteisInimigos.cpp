@@ -246,11 +246,11 @@ void atingeNave(float* nave, std::list<BombaInimiga>& bombasInimigas, int &numVi
             if (it->vertices[9]<=nave[9] && it->vertices[6]>=nave[6]){
 
                 if (numVidas <= 0){
-                    std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
+                    //std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
                 }
                 else{
                     numVidas--;
-                    std::cout<<"\nVOCE FOI ATINGIDO, RESTAM "<<numVidas<<" VIDAS!\n";
+                    //std::cout<<"\nVOCE FOI ATINGIDO, RESTAM "<<numVidas<<" VIDAS!\n";
 
                     if(vidas.size()>0){
                         vidas.pop_back();

@@ -29,12 +29,17 @@
 #define BORDA_VIDA_ESQUERDA 10
 #define BORDA_VIDA_INFERIOR 10
 
+#include <GL/glut.h>
+#include <GL/freeglut.h>
+
+void drawString2 (void * font, std::string s, float x, float y, float z);
+
 //------------------------------------------------------------------------------------
 
 //Tela
 void configuraJanela();
 
-void renderizaJogo(float* nave, std::list <Vida>& vidas, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas);
+void renderizaJogo(bool venceu, bool perdeu, int score, float* nave, std::list <Vida>& vidas, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas);
 
 void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas);
 

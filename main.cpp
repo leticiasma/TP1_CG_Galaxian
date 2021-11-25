@@ -1,10 +1,13 @@
 //TENTAR PERMITIR PARA LINUX TAMBÉM, COM .lib AO INVÉS DE .dll
 
 #include <GLFW/glfw3.h>
+#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 #include <iostream>
 #include <list>
 #include <iterator>
+#include <string>
 
 #include "objetos.hpp"
 #include "uteisTela.hpp"
@@ -30,6 +33,9 @@ bool sairJogo = false;
 bool reiniciarJogo = false;
 
 bool subirNivel = false;
+
+bool venceu = false;
+bool perdeu = false;
 
 bool perdeuJogo = false;
 
@@ -81,13 +87,45 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         perdeuJogo = false;
 
         totalInimigosMortos = 0;
+
+        venceu = false;
+        perdeu = false;
         
     }
 }
 
+// void bitmap_output(int x, int y, char *string, void *font)
+// {
+//   int len, i;
+
+//   glRasterPos2f(x, y);
+//   len = (int) strlen(string);
+//   for (i = 0; i < len; i++) {
+//     glutBitmapCharacter(font, string[i]);
+//   }
+// }
+
+// void Draw_Game_Over()
+// {
+//   glColor3f(0.8, 0.0, 0.0);
+//   bitmap_output((0 + LARGURA_TELA) / 2 - 8,
+//                 (0 + ALTURA_TELA) / 2 + 4,
+//                 "GAME OVER", GLUT_BITMAP_TIMES_ROMAN_24);
+//   if (true)
+//     bitmap_output((0 + LARGURA_TELA) / 2 - 18,
+//                   (0 + ALTURA_TELA) / 2 - 4,
+//                   "Congratulations. You stopped the invasion.",
+//                   GLUT_BITMAP_HELVETICA_18);
+// //   else
+// //     bitmap_output((SCREEN_LEFT + SCREEN_RIGHT) / 2 - 18,
+// //                   (SCREEN_BOTTOM + SCREEN_TOP) / 2 - 4,
+// //                   "Humpf. Mankind is doomed because of you.",
+// //                   GLUT_BITMAP_HELVETICA_18);
+// }
+
 //-----------------------------------------------------------------------------------
 
-int main(){
+int main(int argc, char *argv[]){
     GLFWwindow *window;
     
     //Initializa a biblioteca
@@ -121,8 +159,12 @@ int main(){
 
     int contagemWhile = 0;
 
+    glutInit( & argc, argv );
+
     //Loop até que o usuário feche a janela
-    while (!glfwWindowShouldClose(window) && !sairJogo){
+    while (!glfwWindowShouldClose(window) && !sairJogo){ 
+
+        //RenderString(0.0f, 0.0f, GLUT_BITMAP_TIMES_ROMAN_24, "Hello", RGB(1.0f, 0.0f, 0.0f));
 
         if(!pause && !perdeuJogo){
             if(reiniciarJogo){
@@ -144,12 +186,14 @@ int main(){
 
 
             if (numInimigosMortos == nivelJogo.numLinhas*nivelJogo.numInimigosPorLinha && !printVenceuJogo){
-                if (nivelJogo.nivel == 3){
-                    std::cout<<"\nVOCE VENCEU O JOGO! FORAM MORTOS "<<totalInimigosMortos<<" INIMIGOS. DIGITE R PARA REINICIAR.\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
+                if (nivelJogo.nivel == 3){                    
+                    //std::cout<<"\nVOCE VENCEU O JOGO! FORAM MORTOS "<<totalInimigosMortos<<" INIMIGOS. DIGITE R PARA REINICIAR.\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
                     perdeuJogo = true; //Deveria travar a nave...
+
+                    venceu = true;
                 }
                 else{
-                    std::cout<<"\nVOCE VENCEU O ATAQUE!\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
+                    //std::cout<<"\nVOCE VENCEU O ATAQUE!\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
                 }
                 
                 printVenceuJogo = true;
@@ -183,8 +227,9 @@ int main(){
 
             perdeuJogo = verificaSePerdeuOJogo(inimigos, numVidas);
             if (perdeuJogo && !printPerdeuJogo){
-                std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
+                //std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
                 printPerdeuJogo = true;
+                perdeu = true;
             }
 
             if (!perdeuJogo){
@@ -195,7 +240,7 @@ int main(){
             }
         }
 
-        renderizaJogo(nave, vidas, estrelas, inimigos, tiros, bombasInimigas);
+        renderizaJogo(venceu, perdeu, totalInimigosMortos, nave, vidas, estrelas, inimigos, tiros, bombasInimigas);
  
         //Troca os buffers front e back
         glfwSwapBuffers(window);

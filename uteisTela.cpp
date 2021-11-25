@@ -12,8 +12,16 @@ void configuraJanela(){
     glLoadIdentity(); 
 }
 
-void renderizaJogo(float* nave, std::list <Vida>& vidas, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
-    
+void drawString2 (void * font, std::string s, float x, float y, float z){
+     int i;
+     glRasterPos3f(x, y, z);
+
+     for (i = 0; i < s.size(); i++)
+          glutBitmapCharacter (font, s[i]);
+}
+
+void renderizaJogo(bool venceu, bool perdeu, int score, float* nave, std::list <Vida>& vidas, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
+
     float colors[] = {
         1.0f, 0.0f, 0.0f // red
         // 1.0f, 0.0f, 0.0f,
@@ -108,7 +116,24 @@ void renderizaJogo(float* nave, std::list <Vida>& vidas, std::list <Estrela>& es
         glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
     }
 
+    glColor3f(0.8, 0.0, 0.0);
+    std::string texto = "SCORE: "+std::to_string(score);
+    drawString2(GLUT_BITMAP_HELVETICA_18, texto, LARGURA_TELA-120, 10, 0);
+
+    if(venceu){
+        glColor3f(1.0, 0.0, 0.0);
+        std::string texto = "\nVOCE VENCEU O JOGO! FORAM MORTOS "+std::to_string(score)+" INIMIGOS. DIGITE R PARA REINICIAR.\n";
+        drawString2(GLUT_BITMAP_HELVETICA_12, texto, 10, 300, 0);
+    }
+    else if (perdeu){
+        glColor3f(1.0, 0.0, 0.0);
+        std::string texto = "\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
+        drawString2(GLUT_BITMAP_HELVETICA_12, texto, 10, 300, 0);
+    }
+
 }
+
+
 
 void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
     std::cout<<"POSICAO DA NAVE: \n";
