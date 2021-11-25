@@ -15,7 +15,7 @@ void inicializaNave(GLFWwindow** window, float* nave){
         xpos = LARGURA_TELA-LARGURA_NAVE;
     }
 
-    float x_tl_nave = xpos-LARGURA_NAVE/2;
+    float x_tl_nave = xpos-(LARGURA_NAVE/2);
 
     //TR
     nave[0] = x_tl_nave+LARGURA_NAVE;
@@ -50,10 +50,10 @@ void atualizaNave(GLFWwindow** window, float* nave){
         xpos = LARGURA_TELA-LARGURA_NAVE;
     }
 
-    nave[0] = xpos+LARGURA_NAVE;
-    nave[3] = xpos;
-    nave[6] = xpos;
-    nave[9] = xpos+LARGURA_NAVE;
+    nave[0] = xpos-(LARGURA_NAVE/2)+LARGURA_NAVE;
+    nave[3] = xpos-(LARGURA_NAVE/2);
+    nave[6] = xpos-(LARGURA_NAVE/2);
+    nave[9] = xpos-(LARGURA_NAVE/2)+LARGURA_NAVE;
 }
 
 //------------------------------------------------------------------------------------
