@@ -25,12 +25,13 @@ class Inimigo{
 class Tiro{
     public:
         float vertices [12];
+        float velocidade = 5;
 };
 
 class BombaInimiga{
     public:
         float vertices [12];
-        //float velocidadeBomba = (float)rand()/(float)RAND_MAX;
+        float velocidade = 2;
 };
 
 class Estrela{

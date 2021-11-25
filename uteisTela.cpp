@@ -117,6 +117,7 @@ void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Ti
     std::cout<<"("<<nave[9]<<","<<nave[10]<<") ";
     std::cout<<"("<<nave[6]<<","<<nave[7]<<") \n\n";
 
+    std::cout<<"VELOCIDADE DOS TIROS DA NAVE: 5\n";
     std::cout<<"POSICAO TIROS DA NAVE: \n";
     for (auto &tiro : tiros){
         std::cout<<"("<<tiro.vertices[3]<<","<<tiro.vertices[4]<<") ";
@@ -126,9 +127,9 @@ void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Ti
     }
     std::cout<<std::endl;
 
-
-    std::cout<<"POSICAO DOS INIMIGOS: \n";
+    std::cout<<"INIMIGOS: \n";
     for (auto &inimigo : inimigos){
+        std::cout<<"Velocidade: "<<inimigo.velocidade<<" ; Posicao: ";
         std::cout<<"("<<inimigo.vertices[3]<<","<<inimigo.vertices[4]<<") ";
         std::cout<<"("<<inimigo.vertices[0]<<","<<inimigo.vertices[1]<<") ";
         std::cout<<"("<<inimigo.vertices[9]<<","<<inimigo.vertices[10]<<") ";
@@ -136,6 +137,7 @@ void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Ti
     }
     std::cout<<std::endl;
 
+    std::cout<<"VELOCIDADE DAS BOMBAS INIMIGAS: 2\n";
     std::cout<<"POSICAO DAS BOMBAS INIMIGAS: \n";
     for (auto &bomba : bombasInimigas){
         std::cout<<"("<<bomba.vertices[3]<<","<<bomba.vertices[4]<<") ";
