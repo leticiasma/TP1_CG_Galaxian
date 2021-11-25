@@ -38,6 +38,7 @@ std::list <Inimigo> inimigos;
 std::list<BombaInimiga> bombasInimigas;
 
 std::list<Estrela> estrelas;
+std::list<Vida> vidas;
 
 //-----------------------------------------------------------------------------------
 
@@ -92,6 +93,7 @@ int main(){
     inicializaNave(&window, nave); //POSSIVEL FONTE DE ERROS
     geraInimigos(inimigos);
     geraEstrelas(estrelas);
+    geraVidas(vidas);
 
     bool printVenceuJogo = false;
     bool printPerdeuJogo = false;
@@ -136,7 +138,7 @@ int main(){
             removeTirosTela(tiros);
             removeInimigosTela(inimigos);
 
-            atingeNave(nave, bombasInimigas, numVidas);
+            atingeNave(nave, bombasInimigas, numVidas, vidas);
             mataInimigos(inimigos, tiros, &numInimigosMortos);
 
             perdeuJogo = verificaSePerdeuOJogo(inimigos);
@@ -151,7 +153,7 @@ int main(){
             atualizaBombas(&bombasInimigas);
         }
 
-        renderizaJogo(nave, estrelas, inimigos, tiros, bombasInimigas);
+        renderizaJogo(nave, vidas, estrelas, inimigos, tiros, bombasInimigas);
  
         //Troca os buffers front e back
         glfwSwapBuffers(window);

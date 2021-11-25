@@ -32,4 +32,10 @@ class Estrela{
         //float velocidadeBomba = (float)rand()/(float)RAND_MAX;
 };
 
+class Vida{
+    public:
+        float vertices [12];
+        //float velocidadeBomba = (float)rand()/(float)RAND_MAX;
+};
+
 #endif

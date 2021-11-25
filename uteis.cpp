@@ -12,7 +12,7 @@ void configuraJanela(){
     glLoadIdentity(); 
 }
 
-void renderizaJogo(float* nave, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
+void renderizaJogo(float* nave, std::list <Vida>& vidas, std::list <Estrela>& estrelas, std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
     
     float colors[] = {
         1.0f, 0.0f, 0.0f // red
@@ -33,6 +33,7 @@ void renderizaJogo(float* nave, std::list <Estrela>& estrelas, std::list <Inimig
     };
 
     static const GLfloat corNave[] = {0.4, 0.4, 0.4};
+    static const GLfloat corVidas[] = {0.0, 1.0, 0.0};
     static const GLfloat corTiros[] = {1.0, 1.0, 0.1};
     static const GLfloat corInimigos[] = {0.6, 0.0, 0.0};
     static const GLfloat corBombas[] = {0.0, 0.0, 0.0};
@@ -98,6 +99,15 @@ void renderizaJogo(float* nave, std::list <Estrela>& estrelas, std::list <Inimig
         glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
         glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
     }
+
+    for (auto &vida : vidas){
+        glColor3fv(corVidas);
+        glEnableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're using a vertex array for fixed-function attribute
+        glVertexPointer( 3, GL_FLOAT, 0, vida.vertices); // point to the vertices to be used
+        glDrawArrays( GL_QUADS, 0, 4 ); // draw the vertixes
+        glDisableClientState( GL_VERTEX_ARRAY ); // tell OpenGL that you're finished using the vertex arrayattribute
+    }
+
 }
 
 void imprimeCoordenadas(float* nave,std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, std::list <BombaInimiga>& bombasInimigas){
@@ -175,6 +185,44 @@ void geraEstrelas(std::list <Estrela>& estrelas){
         estrelas.push_back(nova_estrela);
     }
 
+}
+
+//------------------------------------------------------------------------------------
+//Vidas
+void geraVidas(std::list <Vida>& vidas){
+
+    float x_tl = BORDA_VIDA_ESQUERDA;
+    float y_tl = BORDA_VIDA_INFERIOR+ALTURA_VIDA;
+
+    for (int i=0; i<NUM_VIDAS; i++){
+
+        Vida nova_vida;
+
+        //TR
+        nova_vida.vertices[0] = x_tl+LARGURA_VIDA;
+        nova_vida.vertices[1] = y_tl;
+        nova_vida.vertices[2] = 0.0;
+
+        //TL
+        nova_vida.vertices[3] = x_tl;
+        nova_vida.vertices[4] = y_tl;
+        nova_vida.vertices[5] = 0.0;
+
+        //BL
+        nova_vida.vertices[6] = x_tl;
+        nova_vida.vertices[7] = y_tl-ALTURA_VIDA;
+        nova_vida.vertices[8] = 0.0;
+
+        //BR
+        nova_vida.vertices[9] = x_tl+LARGURA_VIDA;
+        nova_vida.vertices[10] = y_tl-ALTURA_VIDA;
+        nova_vida.vertices[11] = 0.0;
+
+        vidas.push_back(nova_vida);
+
+        x_tl += LARGURA_VIDA+ESPACO_VIDAS;
+    }
+    
 }
 
 //------------------------------------------------------------------------------------
@@ -451,19 +499,23 @@ void removeBombasTela(std::list<BombaInimiga>& bombasInimigas){
     }
 }
 
-void atingeNave(float* nave, std::list<BombaInimiga>& bombasInimigas, int &numVidas){
+void atingeNave(float* nave, std::list<BombaInimiga>& bombasInimigas, int &numVidas, std::list<Vida>& vidas){
     std::list<BombaInimiga>::iterator it = bombasInimigas.begin();
 
     while (it!=bombasInimigas.end()){ //Acho que tem que excluir as bombas antes do fim da tela senão se eu passar por cima vai contar como dano ou deixar o espaçamento embaixo da nave menor que uma bomba
         if (it->vertices[7]<=Y_FIXO_TL_NAVE){
             if (it->vertices[9]<=nave[9] && it->vertices[6]>=nave[6]){
 
-                if (numVidas <= 1){
+                if (numVidas <= 0){
                     std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
                 }
                 else{
                     numVidas--;
                     std::cout<<"\nVOCE FOI ATINGIDO, RESTAM "<<numVidas<<" VIDAS!\n";
+
+                    if(vidas.size()>0){
+                        vidas.pop_back();
+                    }
                 }                    
 
                 it = bombasInimigas.erase(it);
