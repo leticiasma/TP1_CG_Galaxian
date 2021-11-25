@@ -16,6 +16,10 @@ class Inimigo{
         //float probabilidadeDeDescer = 0;
         float probabilidadeDeDescer = (float)rand()/(float)RAND_MAX;
         float velocidade = 0.3;
+
+        bool irParaEsquerda = true;
+        int contagemMovimento = 0;
+        bool troca = false;
 };
 
 class Tiro{

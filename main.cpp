@@ -36,6 +36,8 @@ bool perdeuJogo = false;
 float nave[12]; //Mudar isso pra classe já definida
 
 int numInimigosMortos = 0;
+int totalInimigosMortos = 0;
+
 int numVidas = 5;
 
 std::list <Tiro> tiros;
@@ -77,6 +79,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         geraVidas(vidas);
 
         perdeuJogo = false;
+
+        totalInimigosMortos = 0;
         
     }
 }
@@ -140,7 +144,14 @@ int main(){
 
 
             if (numInimigosMortos == nivelJogo.numLinhas*nivelJogo.numInimigosPorLinha && !printVenceuJogo){
-                std::cout<<"\nVOCE VENCEU O ATAQUE!\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
+                if (nivelJogo.nivel == 3){
+                    std::cout<<"\nVOCE VENCEU O JOGO! FORAM MORTOS "<<totalInimigosMortos<<" INIMIGOS. DIGITE R PARA REINICIAR.\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
+                    perdeuJogo = true; //Deveria travar a nave...
+                }
+                else{
+                    std::cout<<"\nVOCE VENCEU O ATAQUE!\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
+                }
+                
                 printVenceuJogo = true;
                 numInimigosMortos = 0;
                 //printVenceuJogo = false;
@@ -167,12 +178,12 @@ int main(){
             removeInimigosTela(inimigos);
 
             atingeNave(nave, bombasInimigas, numVidas, vidas);
-            mataInimigos(inimigos, tiros, &numInimigosMortos);
+            mataInimigos(inimigos, tiros, &numInimigosMortos, &totalInimigosMortos);
 
 
             perdeuJogo = verificaSePerdeuOJogo(inimigos, numVidas);
             if (perdeuJogo && !printPerdeuJogo){
-                std::cout<<"\nVOCE PERDEU O JOGO!\n";
+                std::cout<<"\nVOCE PERDEU O JOGO! APERTE R PARA REINICIAR.\n";
                 printPerdeuJogo = true;
             }
 

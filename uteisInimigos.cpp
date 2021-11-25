@@ -47,15 +47,69 @@ void geraInimigos(Nivel& nivelJogo, std::list <Inimigo>& inimigos){
 }
 
 void atualizaInimigos(std::list <Inimigo>* inimigos){
+
     for (auto &inimigo : *inimigos){
         inimigo.vertices[1] -= inimigo.velocidade;
         inimigo.vertices[4] -= inimigo.velocidade;
         inimigo.vertices[7] -= inimigo.velocidade;
         inimigo.vertices[10] -= inimigo.velocidade;
+
+        if (!inimigo.troca){
+
+            if(inimigo.contagemMovimento < 100){
+                inimigo.vertices[0] -= 3*inimigo.velocidade;
+                inimigo.vertices[3] -= 3*inimigo.velocidade;
+                inimigo.vertices[6] -= 3*inimigo.velocidade;
+                inimigo.vertices[9] -= 3*inimigo.velocidade;
+
+                inimigo.contagemMovimento++;
+            }
+            else{
+                inimigo.vertices[0] += 3*inimigo.velocidade;
+                inimigo.vertices[3] += 3*inimigo.velocidade;
+                inimigo.vertices[6] += 3*inimigo.velocidade;
+                inimigo.vertices[9] += 3*inimigo.velocidade;
+
+                inimigo.contagemMovimento++;
+
+                if(inimigo.contagemMovimento == 300){
+                    inimigo.contagemMovimento = 0;
+                    inimigo.troca = true;
+                }            
+            }
+
+        }
+        else{
+
+            if(inimigo.contagemMovimento < 200){
+                inimigo.vertices[0] -= 3*inimigo.velocidade;
+                inimigo.vertices[3] -= 3*inimigo.velocidade;
+                inimigo.vertices[6] -= 3*inimigo.velocidade;
+                inimigo.vertices[9] -= 3*inimigo.velocidade;
+
+                inimigo.contagemMovimento++;
+            }
+            else{
+                inimigo.vertices[0] += 3*inimigo.velocidade;
+                inimigo.vertices[3] += 3*inimigo.velocidade;
+                inimigo.vertices[6] += 3*inimigo.velocidade;
+                inimigo.vertices[9] += 3*inimigo.velocidade;
+
+                inimigo.contagemMovimento++;
+
+                if(inimigo.contagemMovimento == 300){
+                    inimigo.contagemMovimento = 0;
+                    inimigo.troca = false;
+                }            
+            }
+
+        } 
+
+
     }
 }
 
-void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* numInimigosMortos){
+void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* numInimigosMortos, int* totalInimigosMortos){
     std::list <Inimigo>::iterator it_inimigo = inimigos.begin();
 
     while (it_inimigo!=inimigos.end()){
@@ -68,6 +122,7 @@ void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* n
                     it_tiro = tiros.erase(it_tiro);
                     
                     *numInimigosMortos += 1;
+                    *totalInimigosMortos +=1;
                 }
             }
 

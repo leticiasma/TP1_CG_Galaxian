@@ -21,7 +21,7 @@ void geraInimigos(Nivel& nivelJogo, std::list <Inimigo>& inimigos);
 
 void atualizaInimigos(std::list <Inimigo>* inimigos);
 
-void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* numInimigosMortos);
+void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* numInimigosMortos, int* totalInimigosMortos);
 
 void removeInimigosTela(std::list <Inimigo>& inimigos);
 
