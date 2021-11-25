@@ -89,17 +89,23 @@ void removeInimigosTela(std::list <Inimigo>& inimigos){
     }
 }
 
-bool verificaSePerdeuOJogo(std::list <Inimigo>& inimigos){
+bool verificaSePerdeuOJogo(std::list <Inimigo>& inimigos, int& numVidas){
     std::list <Inimigo>::iterator it = inimigos.begin();
 
-    while (it!=inimigos.end()){
-        if (it->vertices[7]<=Y_FIXO_TL_NAVE){
-            //geraBombaMutante(it);
-            return true;
-        }
-        ++it;
+    if (numVidas <= 0){
+        return true;
     }
-    return false;
+    else{
+        while (it!=inimigos.end()){
+            if (it->vertices[7]<=Y_FIXO_TL_NAVE){
+                //geraBombaMutante(it);
+                return true;
+            }
+            ++it;
+        }
+        return false;
+    }
+
 }
 
 //------------------------------------------------------------------------------------

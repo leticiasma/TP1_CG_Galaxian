@@ -25,7 +25,7 @@ void mataInimigos(std::list <Inimigo>& inimigos, std::list <Tiro>& tiros, int* n
 
 void removeInimigosTela(std::list <Inimigo>& inimigos);
 
-bool verificaSePerdeuOJogo(std::list <Inimigo>& inimigos);
+bool verificaSePerdeuOJogo(std::list <Inimigo>& inimigos, int &numVidas);
 
 //------------------------------------------------------------------------------------
 

@@ -31,6 +31,8 @@ bool reiniciarJogo = false;
 
 bool subirNivel = false;
 
+bool perdeuJogo = false;
+
 float nave[12]; //Mudar isso pra classe já definida
 
 int numInimigosMortos = 0;
@@ -73,6 +75,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
         vidas.clear();
         geraVidas(vidas);
+
+        perdeuJogo = false;
         
     }
 }
@@ -111,14 +115,12 @@ int main(){
     bool printVenceuJogo = false;
     bool printPerdeuJogo = false;
 
-    bool perdeuJogo = false;
-
     int contagemWhile = 0;
 
     //Loop até que o usuário feche a janela
     while (!glfwWindowShouldClose(window) && !sairJogo){
 
-        if(!pause){
+        if(!pause && !perdeuJogo){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
                 //numVidas = 5;
@@ -167,16 +169,19 @@ int main(){
             atingeNave(nave, bombasInimigas, numVidas, vidas);
             mataInimigos(inimigos, tiros, &numInimigosMortos);
 
-            perdeuJogo = verificaSePerdeuOJogo(inimigos);
+
+            perdeuJogo = verificaSePerdeuOJogo(inimigos, numVidas);
             if (perdeuJogo && !printPerdeuJogo){
                 std::cout<<"\nVOCE PERDEU O JOGO!\n";
                 printPerdeuJogo = true;
             }
 
-            atualizaNave(&window, nave);
-            atualizaInimigos(&inimigos);
-            atualizaTiros(&tiros);
-            atualizaBombas(&bombasInimigas);
+            if (!perdeuJogo){
+                atualizaNave(&window, nave);
+                atualizaInimigos(&inimigos);
+                atualizaTiros(&tiros);
+                atualizaBombas(&bombasInimigas);
+            }
         }
 
         renderizaJogo(nave, vidas, estrelas, inimigos, tiros, bombasInimigas);
