@@ -9,16 +9,16 @@
 //------------------------------------------------------------------------------------
 
 //Inimigos
-void geraInimigos(std::list <Inimigo>& inimigos){
-    float x_tl = BORDAS_INICIAIS_TELA_N1;
-    float y_tl = ALTURA_TELA+LADO_INIMIGO_N1;
+void geraInimigos(Nivel& nivelJogo, std::list <Inimigo>& inimigos){
+    float x_tl = nivelJogo.bordasIniciaisTela;
+    float y_tl = ALTURA_TELA+nivelJogo.ladoInimigo;
 
-    for (int i=0; i<NUM_LINHAS_N1; i++){
-        for (int j=0; j<NUM_INIMIGOS_POR_LINHA_N1; j++){
+    for (int i=0; i<nivelJogo.numLinhas; i++){
+        for (int j=0; j<nivelJogo.numInimigosPorLinha; j++){
             Inimigo novo_inimigo;
 
             //TR
-            novo_inimigo.vertices[0] = x_tl+LADO_INIMIGO_N1;
+            novo_inimigo.vertices[0] = x_tl+nivelJogo.ladoInimigo;
             novo_inimigo.vertices[1] = y_tl;
             novo_inimigo.vertices[2] = 0.0;
 
@@ -29,29 +29,29 @@ void geraInimigos(std::list <Inimigo>& inimigos){
 
             //BL
             novo_inimigo.vertices[6] = x_tl;
-            novo_inimigo.vertices[7] = y_tl-LADO_INIMIGO_N1;
+            novo_inimigo.vertices[7] = y_tl-nivelJogo.ladoInimigo;
             novo_inimigo.vertices[8] = 0.0;
 
             //BR
-            novo_inimigo.vertices[9] = x_tl+LADO_INIMIGO_N1;
-            novo_inimigo.vertices[10] = y_tl-LADO_INIMIGO_N1;
+            novo_inimigo.vertices[9] = x_tl+nivelJogo.ladoInimigo;
+            novo_inimigo.vertices[10] = y_tl-nivelJogo.ladoInimigo;
             novo_inimigo.vertices[11] = 0.0;
 
             inimigos.push_back(novo_inimigo);
 
-            x_tl += LADO_INIMIGO_N1+ESPACO_INIMIGOS_N1;
+            x_tl += nivelJogo.ladoInimigo+nivelJogo.espacoInimigos;
         }
-        x_tl = BORDAS_INICIAIS_TELA_N1;
-        y_tl += LADO_INIMIGO_N1+ESPACO_INIMIGOS_N1;
+        x_tl = nivelJogo.bordasIniciaisTela;
+        y_tl += nivelJogo.ladoInimigo+nivelJogo.espacoInimigos;
     }
 }
 
 void atualizaInimigos(std::list <Inimigo>* inimigos){
     for (auto &inimigo : *inimigos){
-        inimigo.vertices[1] -= INC_INIMIGO_N1;
-        inimigo.vertices[4] -= INC_INIMIGO_N1;
-        inimigo.vertices[7] -= INC_INIMIGO_N1;
-        inimigo.vertices[10] -= INC_INIMIGO_N1;
+        inimigo.vertices[1] -= inimigo.velocidade;
+        inimigo.vertices[4] -= inimigo.velocidade;
+        inimigo.vertices[7] -= inimigo.velocidade;
+        inimigo.vertices[10] -= inimigo.velocidade;
     }
 }
 
@@ -135,10 +135,16 @@ void geraBomba(float x_meio_inimigo, float y_bl_inimigo, std::list <BombaInimiga
     bombasInimigas.push_back(nova_bomba);
 }
 
-void atiraBombasInimigas(std::list <Inimigo>* inimigos, std::list <BombaInimiga>* bombasInimigas){
+void atiraBombasInimigas(Nivel& nivelJogo, std::list <Inimigo>* inimigos, std::list <BombaInimiga>* bombasInimigas){
     for (auto &inimigo : *inimigos){
+        if (inimigo.probabilidadeDeDescer > 0.9){
+            inimigo.velocidade = 0.5;
+        }
+        // else{
+        //     inimigo.velocidade = 0.3;
+        // }
         if (inimigo.probabilidadeBomba > 0.8){
-            geraBomba(inimigo.vertices[3]+(LADO_INIMIGO_N1/2), inimigo.vertices[7], *bombasInimigas);
+            geraBomba(inimigo.vertices[3]+(nivelJogo.ladoInimigo/2), inimigo.vertices[7], *bombasInimigas);
         }
     }
 }
@@ -152,9 +158,10 @@ void atualizaBombas(std::list <BombaInimiga>* bombasInimigas){
     }
 }
 
-void mudaProbabilidadesBombas(std::list <Inimigo>* inimigos){
+void mudaProbabilidadesInimigos(std::list <Inimigo>* inimigos){
     for (auto &inimigo : *inimigos){
         inimigo.probabilidadeBomba = (float)rand()/(float)RAND_MAX;
+        //inimigo.probabilidadeDeDescer = (float)rand()/(float)RAND_MAX;
     }
 }
 

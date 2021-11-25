@@ -29,6 +29,8 @@ bool pause = false; //Permite pausar o jogo
 bool sairJogo = false;
 bool reiniciarJogo = false;
 
+bool subirNivel = false;
+
 float nave[12]; //Mudar isso pra classe já definida
 
 int numInimigosMortos = 0;
@@ -41,6 +43,8 @@ std::list<BombaInimiga> bombasInimigas;
 
 std::list<Estrela> estrelas;
 std::list<Vida> vidas;
+
+Nivel nivelJogo;
 
 //-----------------------------------------------------------------------------------
 
@@ -62,7 +66,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         sairJogo = true;
     }
     if (key == GLFW_KEY_R && action == GLFW_PRESS){
+        numVidas = 5; //AAAAAAAAAAAAAAAAAAAA
         reiniciarJogo = true;
+        nivelJogo.nivel = 1;
+        nivelJogo.numLinhas = 1;
+
+        vidas.clear();
+        geraVidas(vidas);
+        
     }
 }
 
@@ -93,7 +104,7 @@ int main(){
     configuraJanela();
 
     inicializaNave(&window, nave); //POSSIVEL FONTE DE ERROS
-    geraInimigos(inimigos);
+    geraInimigos(nivelJogo, inimigos);
     geraEstrelas(estrelas);
     geraVidas(vidas);
 
@@ -110,27 +121,40 @@ int main(){
         if(!pause){
             if(reiniciarJogo){
                 numInimigosMortos = 0;
-                numVidas = 5;
+                //numVidas = 5;
 
                 tiros.clear();
                 inimigos.clear();
                 bombasInimigas.clear();
 
-                geraInimigos(inimigos);
+                geraInimigos(nivelJogo, inimigos);
 
                 reiniciarJogo = false;
                 printVenceuJogo = false;
                 printPerdeuJogo = false;
+
+                perdeuJogo = false; //hmm
             }
 
-            if (numInimigosMortos == 20 && !printVenceuJogo){
-                std::cout<<"\nVOCE VENCEU O JOGO!\n";
+
+            if (numInimigosMortos == nivelJogo.numLinhas*nivelJogo.numInimigosPorLinha && !printVenceuJogo){
+                std::cout<<"\nVOCE VENCEU O ATAQUE!\n"; //Pra vencer o jogo tem que melhorar essa contagem de numInimigosMortos
                 printVenceuJogo = true;
-            }
+                numInimigosMortos = 0;
+                //printVenceuJogo = false;
+            } 
+
+            if (!perdeuJogo && inimigos.size() == 0 && nivelJogo.nivel < 3){
+                nivelJogo.nivel++;
+                nivelJogo.numLinhas++;
+
+                reiniciarJogo = true;
+                subirNivel = true;
+            } 
 
             if(contagemWhile == 100){ //Tornar aleatório para não virem todas as bombas de uma vez
-                mudaProbabilidadesBombas(&inimigos);
-                atiraBombasInimigas(&inimigos, &bombasInimigas);
+                mudaProbabilidadesInimigos(&inimigos);
+                atiraBombasInimigas(nivelJogo, &inimigos, &bombasInimigas);
                 contagemWhile = 0;
             }
 
